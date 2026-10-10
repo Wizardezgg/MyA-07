@@ -42,21 +42,25 @@ export default function Navbar({ categories, activeCategorySlug }: NavbarProps) 
         {/* Top Bar: Logo, Date & Auth CTA */}
         <div className="flex items-center justify-between py-3 border-b border-[#f0f5f0]">
           {/* Logo & Bengali Date */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative w-9 h-9 sm:w-10 sm:h-10 flex-shrink-0">
-              <Image
-                src="/logo-icon.png"
-                alt="বাজার দর"
-                fill
-                className="object-contain"
-                priority
-              />
+          <Link href="/" className="flex items-center gap-2.5 group">
+            <div className="w-10 h-10 rounded-2xl bg-[#05893e] flex items-center justify-center p-2 shadow-sm flex-shrink-0 group-hover:bg-[#047f39] transition-colors">
+              <div className="relative w-5 h-5 flex items-center justify-center">
+                <Image
+                  src="/logo-icon.png"
+                  alt="বাজার দর"
+                  width={20}
+                  height={20}
+                  unoptimized
+                  className="object-contain"
+                  priority
+                />
+              </div>
             </div>
-            <div className="flex flex-col">
-              <span className="text-xl sm:text-2xl font-bold tracking-tight text-[#1d271f] flex items-center gap-1.5">
+            <div className="flex flex-col justify-center">
+              <span className="text-[20px] font-extrabold tracking-tight text-[#1d271f] leading-none mb-1">
                 বাজার দর
               </span>
-              <span className="text-xs text-[#657568] font-medium">
+              <span className="text-[12px] text-[#657568] font-medium leading-none">
                 {banglaDate}
               </span>
             </div>

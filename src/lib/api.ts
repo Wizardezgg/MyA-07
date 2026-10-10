@@ -2,13 +2,15 @@ import { Category, Product } from "@/types";
 import fallbackCategories from "@/data/categories.json";
 import fallbackProducts from "@/data/products.json";
 
-const PRIMARY_BASE_URL = "https://api.abcz.workers.dev/api/bazardor";
-const SECONDARY_BASE_URL = "https://api.api-store.workers.dev/api/bazardor";
+const PRIMARY_BASE_URL = "https://openapi.programming-hero.com/api/bazardor";
+const FALLBACK_BASE_URL_1 = "https://api.abcz.workers.dev/api/bazardor";
+const FALLBACK_BASE_URL_2 = "https://api.api-store.workers.dev/api/bazardor";
 
 async function fetchWithFallback<T>(path: string, fallbackData: T): Promise<T> {
   const urls = [
     `${PRIMARY_BASE_URL}${path}`,
-    `${SECONDARY_BASE_URL}${path}`,
+    `${FALLBACK_BASE_URL_1}${path}`,
+    `${FALLBACK_BASE_URL_2}${path}`,
   ];
 
   for (const url of urls) {
