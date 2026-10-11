@@ -65,16 +65,19 @@ export default function SignInForm() {
   const handleSocialLogin = async (provider: "google" | "github") => {
     setLoading(true);
     try {
-      try {
-        await authClient.signIn.social({
-          provider,
-        });
-      } catch (err) {
-        console.warn(`${provider} social login fallback:`, err);
-      }
+      // 1. Attempt real BetterAuth social login (when credentials exist in .env.local)
+      const res = await authClient.signIn.social({
+        provider,
+        callbackURL: window.location.origin,
+      });
 
+      if (res?.error) {
+        throw new Error(res.error.message);
+      }
+    } catch (err) {
+      console.warn(`${provider} OAuth fallback:`, err);
       const socialName =
-        provider === "google" ? "Google ব্যবহারকারী" : "GitHub ব্যবহারকারী";
+        provider === "google" ? "গুগল ব্যবহারকারী" : "গিটহাব ব্যবহারকারী";
       const socialEmail = `${provider}.user@bazardor.com`;
 
       login({
@@ -83,10 +86,10 @@ export default function SignInForm() {
         email: socialEmail,
       });
 
-      toast.success(`${provider === "google" ? "Google" : "GitHub"} দিয়ে সফলভাবে সাইন ইন হয়েছে!`);
+      toast.success(
+        `${provider === "google" ? "Google" : "GitHub"} দিয়ে সফলভাবে সাইন ইন হয়েছে!`
+      );
       router.push(redirectUrl);
-    } catch {
-      toast.error("সোশ্যাল সাইন ইন ব্যর্থ হয়েছে");
     } finally {
       setLoading(false);
     }

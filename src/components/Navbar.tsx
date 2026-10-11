@@ -77,46 +77,61 @@ export default function Navbar({ categories, activeCategorySlug }: NavbarProps) 
                 <button
                   type="button"
                   onClick={() => setMenuOpen(!menuOpen)}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-xl border border-[#e1e8e1] hover:border-[#05893e] hover:bg-[#f0f5f0] transition-all bg-white"
+                  className="flex items-center gap-2 py-1 px-1.5 rounded-full hover:bg-black/5 transition"
                 >
-                  <div className="w-7 h-7 rounded-full bg-[#eaf8ef] text-[#05893e] font-bold text-xs flex items-center justify-center border border-[#c3d4c5]">
-                    {user.name ? user.name.slice(0, 1).toUpperCase() : "U"}
-                  </div>
-                  <span className="text-sm font-semibold text-[#1d271f] max-w-[100px] truncate">
-                    {user.name || "ব্যবহারকারী"}
+                  {user.image ? (
+                    <div className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 border border-[#e2e8e2]">
+                      <Image
+                        src={user.image}
+                        alt={user.name || "User"}
+                        width={32}
+                        height={32}
+                        className="w-full h-full object-cover"
+                        unoptimized
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-[#0284c7] text-white font-bold text-xs flex items-center justify-center flex-shrink-0 shadow-xs">
+                      {user.name ? user.name.slice(0, 1).toUpperCase() : "U"}
+                    </div>
+                  )}
+                  <span className="text-sm font-semibold text-[#1d271f] max-w-[120px] truncate">
+                    {user.name ? user.name.split(" ")[0] : "ব্যবহারকারী"}
                   </span>
-                  <span className="text-xs text-[#657568]">▾</span>
+                  <span className="text-[10px] text-[#6b7280]">▾</span>
                 </button>
 
-                {/* User Dropdown matching Penpot "Home - User Menu Open" */}
+                {/* User Dropdown matching exact Figma design */}
                 {menuOpen && (
-                  <div className="absolute right-0 mt-2 w-52 bg-white rounded-2xl shadow-lg border border-[#e1e8e1] py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="px-4 py-2 border-b border-[#f0f5f0]">
-                      <p className="text-xs font-semibold text-[#1d271f] truncate">
+                  <div className="absolute right-0 mt-2 w-56 bg-white rounded-2xl shadow-xl border border-[#e2e8e2] p-4 z-50 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="mb-3">
+                      <p className="text-sm font-bold text-[#1d271f] truncate">
                         {user.name}
                       </p>
-                      <p className="text-[11px] text-[#657568] truncate">
+                      <p className="text-xs text-[#9ca3af] truncate mt-0.5">
                         {user.email}
                       </p>
                     </div>
 
-                    <Link
-                      href="/profile"
-                      onClick={() => setMenuOpen(false)}
-                      className="flex items-center gap-2.5 px-4 py-2 text-sm text-[#1d271f] hover:bg-[#f0f5f0] hover:text-[#05893e] transition-colors"
-                    >
-                      <span>👤</span>
-                      <span>আমার প্রোফাইল</span>
-                    </Link>
+                    <div className="space-y-1">
+                      <Link
+                        href="/profile"
+                        onClick={() => setMenuOpen(false)}
+                        className="flex items-center gap-2.5 py-1.5 text-sm font-medium text-[#1d271f] hover:text-[#088743] transition-colors"
+                      >
+                        <span className="text-sm text-[#475569]">👤</span>
+                        <span>আমার প্রোফাইল</span>
+                      </Link>
 
-                    <button
-                      type="button"
-                      onClick={handleLogout}
-                      className="w-full text-left flex items-center gap-2.5 px-4 py-2 text-sm text-[#d03739] hover:bg-[#fdeeed] transition-colors"
-                    >
-                      <span>↩</span>
-                      <span>সাইন আউট</span>
-                    </button>
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full text-left flex items-center gap-2.5 py-1.5 text-sm font-medium text-[#dc2626] hover:opacity-80 transition-colors"
+                      >
+                        <span className="text-sm text-[#dc2626]">↩</span>
+                        <span>সাইন আউট</span>
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>

@@ -50,70 +50,76 @@ export default async function ProductDetailsPage({ params }: ProductPageProps) {
       : product.today;
 
   // Price change direction and styling
+  // In Bazar Dor:
+  // Price Rise (দাম বেড়েছে / isUp) = Red alert badge (▲)
+  // Price Fall (দাম কমেছে / isDown) = Green savings badge (▼)
   const isUp = product.change?.dir === "up";
   const isDown = product.change?.dir === "down";
-  const changeColor = isUp ? "text-[#1a9951]" : isDown ? "text-[#d03739]" : "text-[#657568]";
-  const changeBg = isUp ? "bg-[#eaf8ef]" : isDown ? "bg-[#fdeeed]" : "bg-[#f0f5f0]";
+  const changeColor = isUp ? "text-[#d03739]" : isDown ? "text-[#088743]" : "text-[#657568]";
+  const changeBg = isUp ? "bg-[#fdeeed]" : isDown ? "bg-[#eaf8ef]" : "bg-[#f0f5f0]";
   const arrow = isUp ? "▲" : isDown ? "▼" : "—";
   const changeDiff = product.yesterday ? Math.abs(product.today - product.yesterday) : 0;
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-screen bg-[#edf2ed]">
       <Navbar categories={categories} activeCategorySlug={product.category} />
       <Ticker products={allProducts} />
 
-      <AuthGuard>
-        <main className="flex-1 max-w-[1120px] mx-auto px-4 sm:px-6 py-8 w-full space-y-8">
-          {/* Breadcrumb Navigation: হোম / [ক্যাটাগরি] / [পণ্যের নাম] */}
-          <nav className="flex items-center gap-2 text-sm text-[#657568]">
-            <Link href="/" className="hover:text-[#05893e] transition-colors">
+      <AuthGuard message="পণ্যটির বিস্তারিত দেখতে দয়া করে সাইন ইন করুন">
+        <main className="flex-1 max-w-[1040px] mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full space-y-6">
+          {/* Breadcrumb Navigation: হোম > চাল > বাটাম সাইজ চাল */}
+          <nav className="flex items-center gap-2 text-sm text-[#6b7280]">
+            <Link href="/" className="hover:text-[#088743] transition-colors">
               হোম
             </Link>
-            <span>/</span>
+            <span className="text-xs text-[#9ca3af]">&gt;</span>
             <Link
               href={`/category/${product.category}`}
-              className="hover:text-[#05893e] transition-colors"
+              className="hover:text-[#088743] transition-colors"
             >
               {product.categoryNameBn || "ক্যাটাগরি"}
             </Link>
-            <span>/</span>
-            <span className="font-semibold text-[#1d271f]">{product.nameBn}</span>
+            <span className="text-xs text-[#9ca3af]">&gt;</span>
+            <span className="text-[#1d271f] font-medium">{product.nameBn}</span>
           </nav>
 
           {/* Top Summary Card */}
-          <div className="bg-white border border-[#e1e8e1] rounded-2xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-sm">
-            <div className="flex items-start sm:items-center gap-4">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#fafcfa] border border-[#e1e8e1] flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0 shadow-inner">
-                {product.image || product.categoryIcon || "🛒"}
+          <div className="bg-white border border-[#e2e8e2] rounded-3xl p-6 sm:p-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 shadow-xs">
+            {/* Left: Icon, Name, Category/Unit, Price Change Subtitle */}
+            <div className="flex items-center gap-5">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-[#f4f7f4] flex items-center justify-center text-4xl sm:text-5xl flex-shrink-0">
+                {product.image || product.categoryIcon || "🍚"}
               </div>
-              <div>
+              <div className="space-y-1">
                 <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1d271f]">
                   {product.nameBn}
                 </h1>
-                <p className="text-sm font-medium text-[#657568] mt-1">
+                <p className="text-xs sm:text-sm text-[#6b7280]">
                   {formatBnUnit(product.unit)} · {product.categoryNameBn || "ক্যাটাগরি"}
                 </p>
                 {changeDiff > 0 && (
-                  <p className="text-xs font-semibold text-[#05893e] mt-2 bg-[#eaf8ef] px-2.5 py-1 rounded-md inline-block">
-                    গতকালের তুলনায় আজ {isUp ? "দাম বেড়েছে" : "দাম কমেছে"} · {toBnNum(changeDiff)} টাকা
+                  <p className="text-xs text-[#4b5563] pt-0.5">
+                    গতকালের তুলনায় আজ দাম{" "}
+                    <span className="font-semibold text-[#1d271f]">
+                      {isUp ? "বেড়েছে" : "কমেছে"}
+                    </span>{" "}
+                    · {toBnNum(changeDiff)} টাকা
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Today's Price Highlight */}
-            <div className="flex flex-col items-start md:items-end bg-[#fafcfa] md:bg-transparent p-4 md:p-0 rounded-xl border md:border-none border-[#e1e8e1] w-full md:w-auto">
-              <span className="text-xs font-semibold text-[#657568]">আজকের গড় দাম</span>
-              <div className="flex items-baseline gap-2 mt-0.5">
-                <span className="text-3xl sm:text-4xl font-extrabold text-[#05893e]">
-                  {toBnNum(product.today)}
-                </span>
-                <span className="text-sm font-semibold text-[#657568]">
-                  টাকা / {formatBnUnit(product.unit).replace("প্রতি ", "")}
-                </span>
+            {/* Right: Boxed "আজকের দাম" Card */}
+            <div className="bg-[#f4f7f4] rounded-2xl p-4 sm:p-5 text-center min-w-[140px] w-full sm:w-auto flex flex-col items-center justify-center self-stretch sm:self-auto">
+              <span className="text-xs text-[#6b7280]">আজকের দাম</span>
+              <div className="text-3xl sm:text-4xl font-extrabold text-[#1d271f] my-0.5">
+                {toBnNum(product.today)}
               </div>
+              <span className="text-xs text-[#6b7280] mb-2">
+                টাকা / {formatBnUnit(product.unit).replace("প্রতি ", "")}
+              </span>
               <div
-                className={`mt-2 px-3 py-1 rounded-full text-xs font-bold inline-flex items-center gap-1.5 ${changeBg} ${changeColor}`}
+                className={`px-2.5 py-0.5 rounded-full text-xs font-bold inline-flex items-center gap-1 ${changeBg} ${changeColor}`}
               >
                 <span>{arrow}</span>
                 <span>{toBnNum(product.change?.pct || 0)}%</span>
@@ -121,97 +127,101 @@ export default async function ProductDetailsPage({ params }: ProductPageProps) {
             </div>
           </div>
 
-          {/* Price Summary 3 Stats Cards */}
-          <section className="space-y-3">
-            <h2 className="text-lg font-bold text-[#1d271f]">দামের সারসংক্ষেপ</h2>
+          {/* Price Summary 3 Individual Stats Cards: দামের সারসংক্ষেপ */}
+          <section className="space-y-4">
+            <h2 className="text-lg font-bold text-[#1d271f]">
+              দামের সারসংক্ষেপ
+            </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-              {/* Lowest Price */}
-              <div className="bg-white border border-[#e1e8e1] rounded-2xl p-5 shadow-sm">
-                <span className="text-xs font-medium text-[#657568]">সর্বনিম্ন দাম</span>
-                <div className="text-2xl font-bold text-[#1d271f] mt-1">
-                  {formatBnPrice(lowestPrice)}
+              {/* Lowest Price Card */}
+              <div className="bg-white border border-[#e2e8e2] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                <div>
+                  <span className="text-xs text-[#6b7280]">সর্বনিম্ন দাম</span>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-[#088743] mt-2">
+                    {formatBnPrice(lowestPrice)}
+                  </div>
                 </div>
-                <span className="text-xs text-[#657568] mt-2 block">
+                <span className="text-xs text-[#9ca3af] mt-4 block">
                   সবচেয়ে কম দামের বাজার
                 </span>
               </div>
 
-              {/* Highest Price */}
-              <div className="bg-white border border-[#e1e8e1] rounded-2xl p-5 shadow-sm">
-                <span className="text-xs font-medium text-[#657568]">সর্বাধিক দাম</span>
-                <div className="text-2xl font-bold text-[#1d271f] mt-1">
-                  {formatBnPrice(highestPrice)}
+              {/* Highest Price Card */}
+              <div className="bg-white border border-[#e2e8e2] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                <div>
+                  <span className="text-xs text-[#6b7280]">সর্বাধিক দাম</span>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-[#d03739] mt-2">
+                    {formatBnPrice(highestPrice)}
+                  </div>
                 </div>
-                <span className="text-xs text-[#657568] mt-2 block">
+                <span className="text-xs text-[#9ca3af] mt-4 block">
                   সবচেয়ে বেশি দামের বাজার
                 </span>
               </div>
 
-              {/* Average Price */}
-              <div className="bg-white border border-[#e1e8e1] rounded-2xl p-5 shadow-sm">
-                <span className="text-xs font-medium text-[#657568]">গড় দাম</span>
-                <div className="text-2xl font-bold text-[#05893e] mt-1">
-                  {formatBnPrice(avgPrice)}
+              {/* Average Price Card */}
+              <div className="bg-white border border-[#e2e8e2] rounded-2xl p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+                <div>
+                  <span className="text-xs text-[#6b7280]">গড় দাম</span>
+                  <div className="text-2xl sm:text-3xl font-extrabold text-[#088743] mt-2">
+                    {formatBnPrice(avgPrice)}
+                  </div>
                 </div>
-                <span className="text-xs text-[#657568] mt-2 block">
+                <span className="text-xs text-[#9ca3af] mt-4 block">
                   {formatBnUnit(product.unit)}-এর হিসাবে
                 </span>
               </div>
             </div>
           </section>
 
-          {/* Market Breakdown Table: বাজারভিত্তিক আজকের দাম */}
-          <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-lg font-bold text-[#1d271f]">
-                বাজারভিত্তিক আজকের দাম
-              </h2>
-              <span className="text-xs text-[#657568]">
-                মোট {toBnNum(markets.length)}টি বাজার
-              </span>
-            </div>
+          {/* Market Breakdown Table Section: বাজারভিত্তিক আজকের দাম */}
+          <section className="bg-white border border-[#e2e8e2] rounded-3xl p-6 sm:p-8 shadow-xs space-y-5">
+            <h2 className="text-lg font-bold text-[#1d271f]">
+              বাজারভিত্তিক আজকের দাম
+            </h2>
 
-            <div className="bg-white border border-[#e1e8e1] rounded-2xl overflow-hidden shadow-sm">
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-[#f0f5f0] text-[#1d271f] text-xs font-bold uppercase tracking-wider border-b border-[#e1e8e1]">
-                    <tr>
-                      <th className="py-3.5 px-4 sm:px-6">বাজার</th>
-                      <th className="py-3.5 px-4 sm:px-6">বিভাগ</th>
-                      <th className="py-3.5 px-4 sm:px-6 text-right">সর্বনিম্ন</th>
-                      <th className="py-3.5 px-4 sm:px-6 text-right">সর্বাধিক</th>
-                      <th className="py-3.5 px-4 sm:px-6 text-right">গড়</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#f0f5f0] text-[#1d271f]">
-                    {markets.map((m, idx) => {
-                      const marketAvg = Math.round((m.min + m.max) / 2);
-                      return (
-                        <tr
-                          key={`${m.market}-${idx}`}
-                          className="hover:bg-[#fafcfa] transition-colors"
-                        >
-                          <td className="py-3.5 px-4 sm:px-6 font-semibold">
-                            {m.market}
-                          </td>
-                          <td className="py-3.5 px-4 sm:px-6 text-[#657568]">
-                            {m.division}
-                          </td>
-                          <td className="py-3.5 px-4 sm:px-6 text-right">
-                            {formatBnPrice(m.min)}
-                          </td>
-                          <td className="py-3.5 px-4 sm:px-6 text-right">
-                            {formatBnPrice(m.max)}
-                          </td>
-                          <td className="py-3.5 px-4 sm:px-6 text-right font-bold text-[#05893e]">
-                            {formatBnPrice(marketAvg)}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b border-[#e2e8e2] text-xs font-semibold text-[#6b7280]">
+                    <th className="py-3 px-3 text-left">বাজার</th>
+                    <th className="py-3 px-3 text-left">বিভাগ</th>
+                    <th className="py-3 px-3 text-right">সর্বনিম্ন</th>
+                    <th className="py-3 px-3 text-right">সর্বাধিক</th>
+                    <th className="py-3 px-3 text-right">গড়</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#f0f4f0] text-sm text-[#1d271f]">
+                  {markets.map((m, idx) => {
+                    const avg = (m.min + m.max) / 2;
+                    const avgFormatted =
+                      avg % 1 === 0 ? toBnNum(avg) : toBnNum(avg.toFixed(2));
+
+                    return (
+                      <tr
+                        key={`${m.market}-${idx}`}
+                        className="hover:bg-[#f9faf9] transition-colors"
+                      >
+                        <td className="py-3.5 px-3 font-medium">
+                          {m.market}
+                        </td>
+                        <td className="py-3.5 px-3 text-[#6b7280]">
+                          {m.division}
+                        </td>
+                        <td className="py-3.5 px-3 text-right text-[#4b5563]">
+                          {toBnNum(m.min)} টাকা
+                        </td>
+                        <td className="py-3.5 px-3 text-right text-[#4b5563]">
+                          {toBnNum(m.max)} টাকা
+                        </td>
+                        <td className="py-3.5 px-3 text-right font-bold text-[#1d271f]">
+                          {avgFormatted} টাকা
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </section>
         </main>

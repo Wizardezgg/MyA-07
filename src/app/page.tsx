@@ -35,12 +35,10 @@ export default async function HomePage() {
       <main className="flex-1 max-w-[1120px] mx-auto px-4 sm:px-6 py-10 w-full space-y-12">
         {/* Section A — “আজ দাম বেড়েছে ▲”: Top 6 risers */}
         <section>
-          <div className="flex items-center gap-2.5 mb-5">
-            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#eaf8ef] text-[#1a9951] font-bold text-sm">
-              ▲
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#1d271f]">
-              আজ দাম বেড়েছে
+          <div className="flex items-center gap-2 mb-5">
+            <h2 className="text-xl sm:text-2xl font-black text-[#1d271f] flex items-center gap-2">
+              <span className="text-[#d03739]">▲</span>
+              <span>আজ দাম বেড়েছে</span>
             </h2>
             <span className="text-xs text-[#657568] ml-auto">
               সর্বোচ্চ {toBnNum(risers.length)}টি পণ্য
@@ -55,12 +53,10 @@ export default async function HomePage() {
 
         {/* Section B — “আজ দাম কমেছে ▼”: Top 6 fallers */}
         <section>
-          <div className="flex items-center gap-2.5 mb-5">
-            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-[#fdeeed] text-[#d03739] font-bold text-sm">
-              ▼
-            </span>
-            <h2 className="text-xl sm:text-2xl font-bold text-[#1d271f]">
-              আজ দাম কমেছে
+          <div className="flex items-center gap-2 mb-5">
+            <h2 className="text-xl sm:text-2xl font-black text-[#1d271f] flex items-center gap-2">
+              <span className="text-[#088743]">▼</span>
+              <span>আজ দাম কমেছে</span>
             </h2>
             <span className="text-xs text-[#657568] ml-auto">
               সর্বোচ্চ {toBnNum(fallers.length)}টি পণ্য

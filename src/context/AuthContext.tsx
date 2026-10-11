@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { authClient, useSession } from "@/lib/auth-client";
 
 export interface User {
   id: string;
@@ -26,28 +27,64 @@ const AuthContext = createContext<AuthContextType>({
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { data: sessionData, isPending } = useSession();
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Sync with BetterAuth reactive session (for Google/GitHub OAuth returns)
   useEffect(() => {
+    let customName: string | undefined;
     try {
       const stored = localStorage.getItem("bazardor_user");
       if (stored) {
-        setUser(JSON.parse(stored));
+        const parsed = JSON.parse(stored);
+        if (
+          parsed &&
+          (parsed.email === sessionData?.user?.email || !sessionData) &&
+          parsed.name
+        ) {
+          customName = parsed.name;
+        }
       }
     } catch {
-      // Ignore parse error
-    } finally {
+      // Ignore
+    }
+
+    if (sessionData?.user) {
+      const authUser: User = {
+        id: sessionData.user.id,
+        name: customName || sessionData.user.name,
+        email: sessionData.user.email,
+        image: sessionData.user.image || undefined,
+      };
+      setUser(authUser);
+      localStorage.setItem("bazardor_user", JSON.stringify(authUser));
+      setLoading(false);
+    } else if (!isPending) {
+      // Check stored user from email/password fallback if BetterAuth session is empty
+      try {
+        const stored = localStorage.getItem("bazardor_user");
+        if (stored) {
+          setUser(JSON.parse(stored));
+        }
+      } catch {
+        // Ignore parse error
+      }
       setLoading(false);
     }
-  }, []);
+  }, [sessionData, isPending]);
 
   const login = (newUser: User) => {
     setUser(newUser);
     localStorage.setItem("bazardor_user", JSON.stringify(newUser));
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await authClient.signOut();
+    } catch {
+      // Ignore
+    }
     setUser(null);
     localStorage.removeItem("bazardor_user");
   };
@@ -57,6 +94,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const updated = { ...user, ...data };
     setUser(updated);
     localStorage.setItem("bazardor_user", JSON.stringify(updated));
+
+    // Also update BetterAuth server if logged in via BetterAuth
+    try {
+      await (authClient as unknown as { updateUser?: (args: { name: string }) => Promise<unknown> })
+        .updateUser?.({ name: updated.name });
+    } catch {
+      // Ignore
+    }
   };
 
   return (

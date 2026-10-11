@@ -7,9 +7,15 @@ import toast from "react-hot-toast";
 
 interface AuthGuardProps {
   children: React.ReactNode;
+  message?: string;
+  redirectTo?: string;
 }
 
-export default function AuthGuard({ children }: AuthGuardProps) {
+export default function AuthGuard({
+  children,
+  message = "এই পৃষ্ঠাটি দেখতে দয়া করে সাইন ইন করুন",
+  redirectTo = "/signin",
+}: AuthGuardProps) {
   const router = useRouter();
   const { user, loading } = useAuth();
   const [checked, setChecked] = useState(false);
@@ -17,16 +23,16 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        toast.error("পণ্যটির বিস্তারিত দেখতে দয়া করে সাইন ইন করুন", {
+        toast.error(message, {
           id: "auth-guard-redirect",
           duration: 3500,
         });
-        router.replace("/signin");
+        router.replace(redirectTo);
       } else {
         setChecked(true);
       }
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, message, redirectTo]);
 
   // While checking auth state, show a clean skeleton / spinner
   if (loading || !checked) {
