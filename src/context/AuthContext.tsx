@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useRef } from "react";
 import { authClient, useSession } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export interface User {
   id: string;
@@ -59,6 +60,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       };
       setUser(authUser);
       localStorage.setItem("bazardor_user", JSON.stringify(authUser));
+
+      // Show toast if just logged in via social/OAuth callback
+      if (typeof window !== "undefined" && sessionStorage.getItem("bazardor_oauth_pending")) {
+        const providerName = sessionStorage.getItem("bazardor_oauth_provider") || "Google";
+        sessionStorage.removeItem("bazardor_oauth_pending");
+        sessionStorage.removeItem("bazardor_oauth_provider");
+        toast.success(`${providerName} দিয়ে সফলভাবে সাইন ইন হয়েছে!`);
+      }
+
       setLoading(false);
     } else if (!isPending) {
       // Check stored user from email/password fallback if BetterAuth session is empty

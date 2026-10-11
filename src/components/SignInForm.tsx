@@ -65,6 +65,14 @@ export default function SignInForm() {
   const handleSocialLogin = async (provider: "google" | "github") => {
     setLoading(true);
     try {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("bazardor_oauth_pending", "true");
+        sessionStorage.setItem(
+          "bazardor_oauth_provider",
+          provider === "google" ? "Google" : "GitHub"
+        );
+      }
+
       // 1. Attempt real BetterAuth social login (when credentials exist in .env.local)
       const res = await authClient.signIn.social({
         provider,

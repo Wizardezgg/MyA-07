@@ -40,9 +40,6 @@ export default async function HomePage() {
               <span className="text-[#d03739]">▲</span>
               <span>আজ দাম বেড়েছে</span>
             </h2>
-            <span className="text-xs text-[#657568] ml-auto">
-              সর্বোচ্চ {toBnNum(risers.length)}টি পণ্য
-            </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {risers.map((product) => (
@@ -58,9 +55,6 @@ export default async function HomePage() {
               <span className="text-[#088743]">▼</span>
               <span>আজ দাম কমেছে</span>
             </h2>
-            <span className="text-xs text-[#657568] ml-auto">
-              সর্বোচ্চ {toBnNum(fallers.length)}টি পণ্য
-            </span>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {fallers.map((product) => (
@@ -70,19 +64,14 @@ export default async function HomePage() {
         </section>
 
         {/* Section C — “সব পণ্য” with anchor id="সব-পণ্য" */}
-        <section id="সব-পণ্য" className="scroll-mt-24 pt-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 mb-6 border-b border-[#e1e8e1] pb-3">
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-[#1d271f]">
-                সব পণ্য
-              </h2>
-              <p className="text-sm text-[#657568] mt-1">
-                নিত্যপ্রয়োজনীয় সকল পণ্যের হালনাগাদ বাজারদর
-              </p>
-            </div>
-            <div className="text-sm font-semibold text-[#05893e] bg-[#eaf8ef] px-3 py-1 rounded-full w-fit">
+        <section id="সব-পণ্য" className="scroll-mt-24 space-y-4">
+          <div>
+            <h2 className="text-xl sm:text-2xl font-bold text-[#1d271f]">
+              সব পণ্য
+            </h2>
+            <p className="text-xs sm:text-sm text-[#657568] mt-1">
               মোট {toBnNum(products.length)}টি পণ্য দেখানো হচ্ছে
-            </div>
+            </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-3 gap-4">
             {products.map((product) => (
