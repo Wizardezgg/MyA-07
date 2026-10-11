@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Category } from "@/types";
 import { getBengaliDate } from "@/lib/bengali";
 import { useAuth } from "@/context/AuthContext";
@@ -14,10 +15,13 @@ interface NavbarProps {
 }
 
 export default function Navbar({ categories, activeCategorySlug }: NavbarProps) {
+  const pathname = usePathname();
   const banglaDate = getBengaliDate();
   const { user, logout } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  const isAllActive = pathname === "/" && !activeCategorySlug;
 
   // Close dropdown menu when clicking outside
   useEffect(() => {
@@ -140,7 +144,7 @@ export default function Navbar({ categories, activeCategorySlug }: NavbarProps) 
           <Link
             href="/"
             className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap transition-all ${
-              !activeCategorySlug
+              isAllActive
                 ? "bg-[#05893e] text-white shadow-sm font-semibold"
                 : "text-[#1d271f] hover:bg-[#f0f5f0] bg-white border border-[#e1e8e1]"
             }`}
