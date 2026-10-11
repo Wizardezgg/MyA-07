@@ -43,21 +43,21 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   const categoryIcon = currentCategory?.icon || "🛒";
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 flex flex-col min-h-screen bg-[#edf2ed]">
       <Navbar categories={categories} activeCategorySlug={slug} />
       <Ticker products={allProducts} />
 
-      <main className="flex-1 max-w-[1120px] mx-auto px-4 sm:px-6 py-8 w-full">
-        {/* Category Header */}
-        <div className="flex items-center gap-4 mb-8 bg-gradient-to-r from-white to-[#f0f5f0] p-6 rounded-2xl border border-[#e1e8e1] shadow-sm">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-[#e1e8e1] flex items-center justify-center text-3xl sm:text-4xl shadow-sm">
+      <main className="flex-1 max-w-[1120px] mx-auto px-4 sm:px-6 py-8 w-full space-y-6">
+        {/* Category Header matching exact Penpot design */}
+        <div className="flex items-center gap-4 bg-white p-6 sm:p-7 rounded-3xl border border-[#e2e8e2] shadow-xs">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-[#f4f7f4] flex items-center justify-center text-3xl sm:text-4xl flex-shrink-0">
             {categoryIcon}
           </div>
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-[#1d271f]">
               {categoryName}
             </h1>
-            <p className="text-sm text-[#657568] mt-1 font-medium">
+            <p className="text-xs sm:text-sm text-[#657568] mt-1">
               {toBnNum(categoryProducts.length)}টি পণ্যের আজকের দাম ও পরিবর্তন
             </p>
           </div>

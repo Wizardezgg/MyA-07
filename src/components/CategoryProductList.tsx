@@ -35,39 +35,38 @@ export default function CategoryProductList({ initialProducts }: CategoryProduct
 
   return (
     <div className="space-y-6">
-      {/* Control Bar: Product Count & Challenge C1 Sort Dropdown */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-4 sm:p-5 rounded-2xl border border-[#e1e8e1] shadow-sm">
-        <div className="text-sm font-medium text-[#1d271f]">
-          মোট <span className="font-bold text-[#05893e]">{toBnNum(sortedProducts.length)}</span>টি পণ্য দেখানো হচ্ছে
-        </div>
-
+      {/* White Bar: Contains only right-aligned 'সাজান' dropdown */}
+      <div className="bg-white px-5 py-3 rounded-2xl border border-[#e2e8e2] shadow-xs flex items-center justify-end">
         {/* Challenge C1: Sort dropdown with chevron icon */}
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <label htmlFor="sort-select" className="text-sm font-semibold text-[#657568] whitespace-nowrap">
+        <div className="flex items-center gap-2">
+          <label htmlFor="sort-select" className="text-xs sm:text-sm font-semibold text-[#657568] whitespace-nowrap">
             সাজান:
           </label>
-          <div className="relative flex-1 sm:flex-initial">
+          <div className="relative">
             <select
               id="sort-select"
               value={sortOption}
               onChange={handleSortChange}
-              className="w-full sm:w-auto appearance-none bg-[#fafcfa] border border-[#e1e8e1] hover:border-[#05893e] rounded-xl pl-3.5 pr-9 py-2 text-sm font-medium text-[#1d271f] focus:outline-none focus:border-[#05893e] focus:ring-1 focus:ring-[#05893e] cursor-pointer shadow-sm transition-all"
+              className="appearance-none bg-white border border-[#e2e8e2] hover:border-[#088743] rounded-xl pl-3 pr-8 py-1.5 text-xs sm:text-sm font-medium text-[#1d271f] focus:outline-none focus:border-[#088743] cursor-pointer shadow-xs transition-all"
             >
               <option value="default">ডিফল্ট</option>
               <option value="price-asc">দাম: কম থেকে বেশি</option>
               <option value="price-desc">দাম: বেশি থেকে কম</option>
             </select>
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-[#657568]">
-              <svg
-                className="w-4 h-4 fill-current"
-                viewBox="0 0 20 20"
-              >
+              <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
                 <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
               </svg>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Product count text placed directly on the page background below the white card */}
+      <div className="text-xs sm:text-sm text-[#657568] -mt-2">
+        মোট {toBnNum(sortedProducts.length)}টি পণ্য দেখানো হচ্ছে
+      </div>
+
 
       {/* Grid of Product Cards or Transition Skeleton */}
       {isPending ? (
